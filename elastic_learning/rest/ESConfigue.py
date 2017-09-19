@@ -57,7 +57,7 @@ class ESRequest:
     def __http_request(self, method, param, request_url="", end_request=""):
         if request_url == "" or request_url is None:
             a = method(self.__request_url + end_request, json=param)
-            return a.json()
+            return a
         else:
             a = method(self.__request_url + end_request + "?" + request_url, json=param)
-            return a.json()
+            return a
