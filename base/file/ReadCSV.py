@@ -24,7 +24,7 @@ def send_msg(words):
         "city": words[0],
         "high_level_school_num": float(words[1]),
         "hospital": (float(words[2])),
-        "doctor_num": 0,
+        "doctor_num": (float(words[3])),
         "cinema_num":0,
         "year": 2015,
         "from": "国家统计局"
@@ -46,7 +46,7 @@ def parse_csv(filename):
     for line in fh:
         if i > 0:
             words = line.split(",")
-            id = send_msg(words[:len(words) - 2])
+            id = send_msg(words[:len(words) - 1])
             line = line.replace("\n", id + "\n")
             results.append(line)
         else:
