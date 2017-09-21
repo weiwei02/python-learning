@@ -49,5 +49,11 @@ va_3 = csv.iat[1, 1]
 
 help(csv)
 
+def iter():
+    a = csv.index.size
+    b = columns.size
+
+
 if __name__ == '__main__':
-    print(head)
+    # print(head)
+    iter()
