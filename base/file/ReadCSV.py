@@ -5,10 +5,13 @@
     :sine 2017/9/21
     :version 1.0
 """
+from elastic_learning.rest.ESConfigue import ESRequest
 
+
+es = ESRequest(index="a/", i_type="healthCareAndEducation/")
 
 def open_file(filename):
-    fh =None
+    fh = None
     try:
         fh = open(filename, encoding='utf-8')
     except Exception as e:
@@ -17,8 +20,16 @@ def open_file(filename):
 
 
 def send_msg(words):
-    print("城市： {0},  {1}   {2}".format(*words))
-    return "1"
+    param = {
+        "city": words[0],
+        "high_level_school_num": float(words[1]),
+        "hospital": (float(words[2])),
+        "doctor_num": 0,
+        "cinema_num":0,
+        "year": 2015,
+        "from": "国家统计局"
+    }
+    return es.insertWithGenerater(param)
 
 
 def write_to_csv(results):
@@ -35,8 +46,8 @@ def parse_csv(filename):
     for line in fh:
         if i > 0:
             words = line.split(",")
-            send_msg(words[:len(words) - 2])
-            line = line.replace("\n", str(i) + "\n")
+            id = send_msg(words[:len(words) - 2])
+            line = line.replace("\n", id + "\n")
             results.append(line)
         else:
             results.append(line)

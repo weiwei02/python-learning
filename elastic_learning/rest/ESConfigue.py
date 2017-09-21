@@ -11,7 +11,7 @@ SEARCH = "_search"
 
 
 class ESRequest:
-    def __init__(self, url="", index="", i_type=""):
+    def __init__(self, url=URL, index="", i_type=""):
         self.__url = url
         self.__index = index
         self.__i_type = i_type
@@ -61,3 +61,14 @@ class ESRequest:
         else:
             a = method(self.__request_url + end_request + "?" + request_url, json=param)
             return a
+
+    def insertWithGenerater(self, param):
+        """
+        向es中插入一条数据，并返回被插入的数据的id
+        :param param: 
+        :return: 插入数据的id，如果插入失败则返回空字符串
+        """
+        result = self.post(param)
+        if result.status_code == 201:
+            return result.json().get("_id")
+        return ""
