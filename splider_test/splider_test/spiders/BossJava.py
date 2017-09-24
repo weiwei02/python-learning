@@ -27,7 +27,7 @@ class BossJava(scrapy.Spider):
         bossDetail = response.meta["boss"]
         # bossDetail["id"] = response.url.split("/")[-1].split(".")[0]
         bossDetail["job_sec"] = selector.xpath("//div[@class='job-sec']/div/text()").extract()
-        return bossDetail
+        yield bossDetail
 
     def parse_list(self, response):
         selector = response.selector
