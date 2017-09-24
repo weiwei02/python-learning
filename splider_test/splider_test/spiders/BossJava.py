@@ -22,14 +22,12 @@ class BossJava(scrapy.Spider):
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse_list)
 
-    def parse_detail(self, boss):
-        def func(response):
-            selector = response.selector
-            bossDetail = boss
-            # bossDetail["id"] = response.url.split("/")[-1].split(".")[0]
-            bossDetail["job_sec"] = selector.xpath("//div[@class='job-sec']/div/text()").extract_first()
-            return bossDetail
-        return func
+    def parse_detail(self, response):
+        selector = response.selector
+        bossDetail = response.meta["boss"]
+        # bossDetail["id"] = response.url.split("/")[-1].split(".")[0]
+        bossDetail["job_sec"] = selector.xpath("//div[@class='job-sec']/div/text()").extract()
+        return bossDetail
 
     def parse_list(self, response):
         selector = response.selector
@@ -38,8 +36,7 @@ class BossJava(scrapy.Spider):
             boss = BossItem()
             name = self.parse_job_info(boss, job)
             detail_page = response.urljoin(name.xpath("@href").extract_first())
-            yield scrapy.Request(detail_page, callback=self.parse_detail(boss))
-
+            yield scrapy.Request(detail_page, callback=self.parse_detail, meta={"boss": boss})
 
         next_page = selector.xpath("//div[@class='page']/a[@class='next']/@href").extract_first()
         if next_page is not None:
