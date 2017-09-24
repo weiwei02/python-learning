@@ -10,6 +10,7 @@ from elastic_learning.rest.ESConfigue import ESRequest
 
 es = ESRequest(index="a/", i_type="healthCareAndEducation/")
 
+
 def open_file(filename):
     fh = None
     try:
