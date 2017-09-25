@@ -16,6 +16,7 @@ import random
 import json
 import time
 import scrapy
+import scrapy.downloadermiddlewares.retry
 
 class Proxies(object):
     """docstring for Proxies"""
@@ -126,7 +127,7 @@ if __name__ == '__main__':
     a.verify_proxies()
     print(a.proxies)
     proxie = a.proxies
-    with open('proxies.txt', 'a') as f:
+    with open('proxies/proxies-tmp.txt', 'a') as f:
         for proxy in proxie:
             f.write(proxy + '\n')
 
@@ -134,7 +135,11 @@ if __name__ == '__main__':
 class ProxyMiddleWare(object):
     """docstring for ProxyMiddleWare"""
     def __init__(self):
+        self.index = 0
         self.proxys = []
+        self.fail_map = {}
+        self.f = open("proxies/proxies-boss.txt", "w")
+        self.use_ips_map = {}
 
     def process_spider_exception(self, response, exception, spider):
         # Called when a spider or process_spider_input() method
@@ -144,32 +149,70 @@ class ProxyMiddleWare(object):
         # or Item objects.
         print(exception)
 
+    def process_exception(self, request, exception, spider):
+        self.mark_proxy_cannot_use(request)
+
     def process_request(self, request, spider):
         '''对request对象加上proxy'''
         proxy = self.get_random_proxy()
-        print("本次请求ip:" + proxy)
+        # print("本次请求ip:" + proxy)
         request.meta['proxy'] = proxy
 
     def process_response(self, request, response, spider):
         '''对返回的response处理'''
         # 如果返回的response状态不是200，重新生成当前request对象
+        # print("code = %d" % response.status)
         if response.status != 200:
+            self.mark_proxy_cannot_use(request)
             proxy = self.get_random_proxy()
-            print("再次尝试使用代理:" + proxy)
             # 对当前reque加上代理
             request.meta['proxy'] = proxy
             return request
+        else:
+            self.save_use_ip(request)
         return response
+
+    def save_use_ip(self, request):
+        """保存可用ip"""
+        used = self.use_ips_map.get(request.meta["proxy"])
+        if used:
+            self.use_ips_map[request.meta["proxy"]] = used + 1
+            if used == 3:
+                self.f.write(request.meta["proxy"] + "/n")
+                self.f.flush()
+        else:
+            self.use_ips_map[request.meta["proxy"]] = 1
+
+    def mark_proxy_cannot_use(self, request):
+        """标记纳西额请求失败的ip"""
+        proxy = request.meta['proxy']
+        hava = self.fail_map.get(proxy)
+        if not hava:
+            self.fail_map[hava] = 1
+        else:
+            if self.fail_map[hava] < 10:
+                self.fail_map[hava] = self.fail_map[hava] + 1
+            else:
+                self.proxys.remove(hava)
 
     def get_random_proxy(self):
         '''随机从文件中读取proxy'''
         if not self.proxys:
             while 1:
-                with open('proxies.txt', 'r') as f:
+                with open('proxies/proxies-tmp.txt', 'r') as f:
                     proxies = f.readlines()
                 if proxies:
                     break
                 else:
                     time.sleep(1)
         proxy = random.choice(proxies)
+        # proxy = self.sequen_proxy(proxies)
         return proxy
+
+    def sequen_proxy(self, proxies):
+        """顺序读取ip"""
+        if self.index < len(proxies):
+            self.index += 1
+        else:
+            self.index = 0
+        return proxies[self.index]

@@ -16,8 +16,8 @@ class BossJava(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            'https://www.zhipin.com/c100010000-p100101/?ka=cpc_side_100101',
-            "https://www.zhipin.com/c100010000-p100302/?ka=cpc_side_100302"
+            'https://www.zhipin.com/c100010000-p100101/?page=5',
+            "https://www.zhipin.com/c100010000-p100302/?page=9"
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse_list)

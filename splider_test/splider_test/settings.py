@@ -29,14 +29,14 @@ ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #为了达到更高的抓取效率，可以禁用Autothrottle扩展和增加并发请求的最大数量，以及设置下载超时
-CONCURRENT_REQUESTS = 32
-CONCURRENT_REQUESTS_PER_DOMAIN = 32
+CONCURRENT_REQUESTS = 50
+CONCURRENT_REQUESTS_PER_DOMAIN = 50
 # AUTOTHROTTLE_ENABLED = False
-DOWNLOAD_TIMEOUT = 6000
+DOWNLOAD_TIMEOUT = 60
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-# DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -83,7 +83,7 @@ ITEM_PIPELINES = {
     'splider_test.pipelines.JSONLinePipeLine': 300,
     'splider_test.pipelines.CSVPipeLine': 301,
 }
-
+RETRY_TIMES = 10
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
