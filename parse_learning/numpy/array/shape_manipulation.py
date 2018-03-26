@@ -9,7 +9,7 @@ import numpy as np
 
 print("In: b = np.arange(25).reshape(2,3,4)")
 # 创建一个数组，并将其形状转化为三维数组
-b = np.arange(24).reshape(2,3,4)
+b = np.arange(24).reshape(2, 3, 4)
 """
 out: 
 [[[ 0  1  2  3]
