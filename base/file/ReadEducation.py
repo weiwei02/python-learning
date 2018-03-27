@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
 """ 需求： 读取学历教育csv文件，并生成学历教育对象数据
+    1. 类创建
+    2. 私有/公有属性 ， get/set方法
+    3. 方法的动态替换
+    4. 文件的读取
     :author Wang Weiwei <email>weiwei02@vip.qq.com / weiwei.wang@100credit.com</email> 
     :sine 2018/3/26
     :version 1.0

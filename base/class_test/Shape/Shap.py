@@ -56,3 +56,12 @@ class Circle(Point):
 
     def __str__(self):
         return repr(self)
+
+    def __gt__(self, other):
+        return not self.radius > other.radius
+
+    def __ne__(self, other):
+        return not (self.radius == other.radius and super().__eq__(other))
+
+    def __add__(self, other):
+        return self.radius + other.radius
